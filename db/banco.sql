@@ -1,5 +1,6 @@
-CREATE TABLE dados (
-    AlunoID int,
+-- Melhoria: Adicionado ID como Primary Key e Auto Incremento
+CREATE TABLE IF NOT EXISTS dados (
+    AlunoID int AUTO_INCREMENT PRIMARY KEY,
     Nome varchar(50),
     Sobrenome varchar(50),
     Endereco varchar(150),
