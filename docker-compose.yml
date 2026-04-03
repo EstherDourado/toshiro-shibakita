@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Load Balancer
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
+
+  # Aplicação PHP (Podemos escalar para múltiplas instâncias)
+  app:
+    build:
+      context: ./app
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=Senha123
+      - DB_NAME=meubanco
+    depends_on:
+      - db
+    # A linha abaixo permite escalar facilmente: docker-compose up -d --scale app=3
+    deploy:
+      replicas: 3 
+
+  # Banco de Dados MySQL
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=Senha123
+      - MYSQL_DATABASE=meubanco
+    volumes:
+      - ./db/banco.sql:/docker-entrypoint-initdb.d/banco.sql
+    command: --default-authentication-plugin=mysql_native_password
